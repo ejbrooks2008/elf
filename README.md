@@ -29,6 +29,8 @@ pip install -r requirements.txt
 CLI commands (see `python run.py --help`):
 
 - Prepare data: `python run.py prepare-data --config configs/train/example_lora.yaml`
+- Manual image curation (FiftyOne): `python scripts/curate_with_fiftyone.py --root data/raw`
+- Rename + captions (stub tagger): `python scripts/rename_and_caption.py --root data/raw`
 - Launch labeling: `python run.py label --backend fiftyone`
 - Train (LoRA/DoRA): `python run.py train --config configs/train/example_lora.yaml`
 - Evaluate: `python run.py eval --config configs/eval/image.yaml`
