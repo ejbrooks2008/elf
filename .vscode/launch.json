@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run elf (run.py)",
+  "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/run.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Run elf module",
+  "type": "debugpy",
+      "request": "launch",
+      "module": "elf",
+      "console": "integratedTerminal"
+    }
+  ]
+}

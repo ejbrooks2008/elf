@@ -1,4 +1,5 @@
-from elf.main import main
+"""Entry point for the elf CLI."""
+from elf.cli import main
 
 
 if __name__ == "__main__":

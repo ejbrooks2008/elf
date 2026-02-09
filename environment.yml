@@ -1,0 +1,44 @@
+name: elf
+channels:
+  - conda-forge
+  - pytorch
+  - nvidia
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.1
+  - numpy
+  - pandas
+  - polars
+  - scikit-learn
+  - opencv
+  - pillow
+  - pydantic
+  - rich
+  - git-lfs
+  - pip:
+      - accelerate
+      - bitsandbytes
+      - datasets
+      - diffusers
+      - evaluate
+      - fastapi
+      - gradio
+      - huggingface-hub
+      - peft
+      - safetensors
+      - transformers
+      - wandb
+      - xformers
+      - rembg
+      - fiftyone
+      - onnxruntime
+      - optuna
+      - sentencepiece
+      - tokenizers
+      - tqdm
+      - uvicorn

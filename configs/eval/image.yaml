@@ -1,0 +1,9 @@
+# Image evaluation config
+model: models/sd15-lora
+prompts: configs/prompts/image_eval.txt
+num_samples: 100
+metrics:
+  - clip_score
+  - aesthetic
+  - fid
+output_dir: reports/image_eval

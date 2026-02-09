@@ -1,0 +1,26 @@
+# Example LoRA training config for Stable Diffusion 1.5
+base_model: stabilityai/stable-diffusion-1-5
+adapter: lora
+lora:
+  r: 16
+  alpha: 32
+  target_modules: [to_q, to_k, to_v, to_out.0, fc1, fc2]
+  dropout: 0.05
+train:
+  resolution: 512
+  batch_size: 4
+  lr: 1e-4
+  max_steps: 1000
+  grad_accum: 2
+  mixed_precision: bf16
+  checkpoint_every: 100
+  output_dir: models/sd15-lora
+  resume: false
+data:
+  train_shards: data/processed/train/*.tar
+  val_shards: data/processed/val/*.tar
+  captions: data/labels/captions.jsonl
+  num_workers: 8
+logging:
+  wandb_project: elf
+  wandb_run: sd15-lora-demo

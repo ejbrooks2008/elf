@@ -1,0 +1,26 @@
+# Example DoRA training config for a causal LM
+base_model: meta-llama/Meta-Llama-3-8B
+adapter: dora
+lora:
+  r: 32
+  alpha: 64
+  target_modules: [q_proj, k_proj, v_proj, o_proj]
+  dropout: 0.05
+train:
+  seq_len: 4096
+  batch_size: 2
+  lr: 2e-4
+  max_steps: 2000
+  grad_accum: 8
+  mixed_precision: bf16
+  checkpoint_every: 200
+  output_dir: models/llama3-dora
+  resume: false
+data:
+  dataset: c4
+  split: train
+  streaming: true
+  num_workers: 4
+logging:
+  wandb_project: elf
+  wandb_run: llama3-dora-demo

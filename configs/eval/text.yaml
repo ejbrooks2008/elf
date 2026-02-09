@@ -1,0 +1,10 @@
+# Text evaluation config
+model: models/llama3-dora
+prompts: configs/prompts/text_eval.txt
+num_samples: 100
+metrics:
+  - perplexity
+  - bleu
+  - rouge
+  - toxicity
+output_dir: reports/text_eval

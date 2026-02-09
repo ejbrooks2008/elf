@@ -12,6 +12,10 @@ __pycache__/
 .pytest_cache/
 .coverage
 
+# Data and models
+data/
+models/
+
 # OS
 .DS_Store
 Thumbs.db
