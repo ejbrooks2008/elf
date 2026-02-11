@@ -30,7 +30,7 @@ CLI commands (see `python run.py --help`):
 
 - Prepare data: `python run.py prepare-data --config configs/train/example_lora.yaml`
 - Manual image curation (FiftyOne): `python scripts/curate_with_fiftyone.py --root data/raw`
-- Rename + captions (stub tagger): `python scripts/rename_and_caption.py --root data/raw`
+- Rename + captions (wd + Florence ensemble, uncensored): `python scripts/rename_and_caption.py --root data/raw`
 - Launch labeling: `python run.py label --backend fiftyone`
 - Train (LoRA/DoRA): `python run.py train --config configs/train/example_lora.yaml`
 - Evaluate: `python run.py eval --config configs/eval/image.yaml`
@@ -65,3 +65,17 @@ src/elf/training/  # Training loops & adapters
 src/elf/evaluation/# Metrics and eval utilities
 src/elf/utils/     # Shared helpers
 ```
+
+### Tagging strategy (uncensored, realism-biased)
+
+- Ensemble: wd-v1-4-swinv2 classifier (NSFW-aware tags) + Florence-2-large-ft (community, uncensored) detailed captions.
+- Post-processing: 35% down-weight on anime/cartoon/lineart prefixes, stricter cutoffs for anime noise, canonical `wood_elf` forced, soft vocab for PNW forest, magic, attire, and near-realistic digital art (Alita-like).
+- Thresholds/caps: base cutoff 0.28, global cap 80 tags, per-category caps to keep captions concise; anime tags capped at 5.
+- Outputs: comma-separated tags saved to `data/labels/{id}.txt`, plus manifest entries in `data/labels/manifest.jsonl` with attributes including Florence caption and rating.
+- Caching/resume: tagging cache under `.cache/tagging`; reruns of `rename_and_caption.py` reuse cache and skip existing label/manifest entries unless `--no-skip-existing` is passed. Manifest writes are line-buffered so work is not lost on interruptions. Florence is optional and will fall back to wd-only tagging if it errors (status recorded in manifest attributes).
+
+### Performance defaults (RTX 3060 Ti, 32GB RAM, i7-12700KF)
+
+- wd tagger uses fp16 on CUDA and micro-batches internally sized for ~8GB VRAM.
+- Florence generation runs fp16, greedy decode with max 192 tokens to keep latency reasonable per image.
+- If a run is interrupted, rerun `python scripts/rename_and_caption.py --root data/raw` to continue; processed IDs are read from the manifest and cached tags are reused, so no work is lost.
