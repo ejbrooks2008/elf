@@ -1,4 +1,5 @@
 accelerate>=0.26,<1.0
+albumentations>=2.0
 bitsandbytes
 datasets
 diffusers
@@ -8,13 +9,18 @@ fiftyone
 fsspec>=2023.1.0,<2025.4.0
 gradio
 huggingface-hub>=0.20,<1.0
+kornia>=0.7
+lycoris-lora>=3.0
 numpy>=1.26,<2.0
+omegaconf>=2.3
 onnxruntime
 opencv-python
+optimum-quanto>=0.2
 optuna
 peft
 pillow>=10.2,<13
 polars
+prodigyopt
 pydantic
 pytest>=8.0
 rembg
@@ -23,8 +29,10 @@ safetensors
 scikit-learn
 scipy>=1.13,<1.15
 sentencepiece
+tensorboard>=2.14
 timm
 tokenizers>=0.20,<1.0
+toml
 torch>=2.5,<2.6
 torchaudio>=2.5,<2.6
 torchvision>=0.20,<0.21

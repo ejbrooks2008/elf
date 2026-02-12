@@ -1,0 +1,82 @@
+---
+# ──────────────────────────────────────────────────────────────────────
+#  Elf – Flux.1-Dev LoRA Training Config
+#  Optimised for RTX 3060 Ti 8 GB VRAM
+#  Framework: ostris/ai-toolkit (sd_trainer)
+# ──────────────────────────────────────────────────────────────────────
+job: extension
+config:
+  name: elf_flux_lora
+  process:
+    - type: 'sd_trainer'
+      training_folder: "output/elf_flux_lora"
+      device: cuda:0
+      # trigger word is auto-prepended to captions that don't already contain it
+      trigger_word: "elf_character"
+
+      # ── LoRA adapter ─────────────────────────────────────────────
+      network:
+        type: "lora"
+        linear: 8                # LoRA rank (8 for 8 GB VRAM; saves ~50% vs rank 16)
+        linear_alpha: 8          # alpha = rank → scaling factor 1.0
+
+      # ── Checkpoints ──────────────────────────────────────────────
+      save:
+        dtype: float16
+        save_every: 250          # checkpoint interval (steps)
+        max_step_saves_to_keep: 3
+
+      # ── Dataset ───────────────────────────────────────────────────
+      datasets:
+        - folder_path: "data/training"
+          caption_ext: "txt"
+          caption_dropout_rate: 0.05   # 5 % of steps see no caption
+          shuffle_tokens: false        # keep caption token order
+          cache_latents_to_disk: true  # cache VAE latents to free VRAM
+          resolution: [ 512 ]          # single resolution bucket (8 GB VRAM limit)
+
+      # ── Training hyper-parameters ─────────────────────────────────
+      train:
+        batch_size: 1
+        gradient_accumulation_steps: 1  # keep at 1 to minimize peak VRAM
+        steps: 3000                     # total training steps
+        lr: 4e-4                        # higher LR to compensate for eff. batch=1
+        optimizer: "adamw8bit"          # 8-bit AdamW – saves ~50 % optimizer VRAM
+        lr_scheduler: "cosine"
+        dtype: bf16
+        train_unet: true
+        train_text_encoder: false
+        gradient_checkpointing: true    # trade compute for VRAM
+        noise_scheduler: "flowmatch"    # Flux uses flow-matching
+        skip_first_sample: true
+        # EMA disabled – saves significant VRAM on 8 GB card
+        # ema_config:
+        #   use_ema: true
+        #   ema_decay: 0.99
+
+      # ── Base model ────────────────────────────────────────────────
+      model:
+        name_or_path: "black-forest-labs/FLUX.1-dev"
+        is_flux: true
+        quantize: true           # 8-bit mixed precision – required for 8 GB
+        low_vram: true           # aggressive offloading for monitor-attached GPU
+
+      # ── Sampling / preview ────────────────────────────────────────
+      sample:
+        sampler: "flowmatch"
+        sample_every: 500
+        width: 512
+        height: 512
+        prompts:
+          - "elf_character, highly detailed digital art, a young adult wood elf with red-brown wavy hair past her shoulders, emerald green eyes, freckles on her cheeks, pointy ears, she is barefoot in an old-growth pacific northwest forest, wearing a white blouse under a brown corset with green vine embroidery and a short green skirt, serene expression, muted earthy palette, moody lighting"
+          - "elf_character, highly detailed digital art, a young adult wood elf sitting on a mossy rock beside a cascading waterfall in a dense pacific northwest forest, she has wavy red-brown hair, green eyes, pale skin with freckles, wearing a white blouse under a brown corset, a green skirt, and a green cloak with a leaf brooch, barefoot, autumn colors, dappled filtered light"
+        neg: ""
+        seed: 42
+        walk_seed: true
+        guidance_scale: 3.5
+        sample_steps: 20
+
+# ── Meta ────────────────────────────────────────────────────────────
+meta:
+  name: "[elf] Flux.1-Dev LoRA – Wood Elf Character"
+  version: "0.1.0"

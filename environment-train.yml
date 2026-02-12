@@ -1,0 +1,66 @@
+# Conda environment for Flux LoRA training (ai-toolkit)
+# Separate from the main 'elf' env because ai-toolkit requires
+# torch>=2.6, transformers>=4.57, torchao>=0.10 — which conflict
+# with the tagging pipeline's pinned transformers==4.49.0.
+#
+# Create:  conda create -n elf-train python=3.11 -y
+# Install: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+#          pip install -r ai-toolkit/requirements.txt
+#          pip install "git+https://github.com/huggingface/diffusers@8600b4c10d67b0ce200f664204358747bd53c775" --force-reinstall --no-deps
+#
+# Usage:   conda run -n elf-train python ai-toolkit/run.py configs/train/flux_lora_elf.yaml
+
+name: elf-train
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      # --- Core GPU stack ------------------------------------------------
+      - torch>=2.6.0        # cu124, installed from pytorch.org index
+      - torchvision>=0.21.0
+      - torchaudio>=2.6.0
+      - torchao==0.10.0
+      # --- ai-toolkit pinned deps ----------------------------------------
+      - transformers==4.57.3
+      - "diffusers @ git+https://github.com/huggingface/diffusers@8600b4c10d67b0ce200f664204358747bd53c775"
+      - lycoris-lora==1.8.3
+      - albumentations==1.4.15
+      - albucore==0.0.16
+      - optimum-quanto==0.2.4
+      - av==16.0.1
+      - matplotlib==3.10.1
+      - setuptools==69.5.1
+      - scipy==1.12.0
+      - pytorch-wavelets==1.3.0
+      - controlnet_aux==0.0.10
+      # --- ai-toolkit unpinned deps --------------------------------------
+      - safetensors
+      - flatten_json
+      - pyyaml
+      - oyaml
+      - tensorboard
+      - kornia
+      - invisible-watermark
+      - einops
+      - accelerate
+      - toml
+      - pydantic
+      - omegaconf
+      - k-diffusion
+      - open_clip_torch
+      - timm
+      - prodigyopt
+      - python-dotenv
+      - bitsandbytes
+      - hf_transfer
+      - lpips
+      - pytorch_fid
+      - sentencepiece
+      - huggingface_hub
+      - peft
+      - gradio
+      - python-slugify
+      - opencv-python
+      - torchcodec

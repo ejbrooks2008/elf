@@ -11,11 +11,38 @@ __pycache__/
 # Test/cache
 .pytest_cache/
 .coverage
+.cache/
 
-# Data and models
-data/
+# ── Data (raw/processed images – possibly explicit) ─────────────
+data/raw/
+data/raw_smoke/
+data/processed/
+data/training/
+data/training_smoke/
+data/labels/smoke/
+# Keep label text files tracked; ignore manifests (large JSONL)
+# data/labels/ is NOT ignored
+*.jsonl
+
+# ── Trained model weights (proprietary LoRA checkpoints) ────────
+output/
 models/
+*.safetensors
+*.ckpt
+*.pt
+*.bin
 
-# OS
+# ── ComfyUI (large install + generated images) ─────────────────
+ComfyUI/
+
+# ── External tools ──────────────────────────────────────────────
+ai-toolkit/
+
+# ── Logs ────────────────────────────────────────────────────────
+*.log
+smoke_log.txt
+train_log.txt
+
+# ── OS ──────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
